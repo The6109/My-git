@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My G.I.T – Aviator Tracker</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #111;
+      color: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ffcc;
+      text-shadow: 2px 2px #000;
+    }
+    input, button, textarea {
+      font-family: inherit;
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+    }
+    input, textarea {
+      background-color: #222;
+      color: #0f0;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 15px;
+      padding: 10px;
+      background: #222;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>My G.I.T – Aviator Tracker</h1>
+
+  <label>Enter Last 25 Multipliers (comma separated):</label>
+  <textarea id="inputData" rows="5" placeholder="e.g., 1.5, 2.1, 3.2, ..."></textarea>
+
+  <button onclick="analyze()">Lock & Predict</button>
+
+  <div id="output"></div>
+
+  <script>
+    function analyze() {
+      const input = document.getElementById("inputData").value;
+      const numbers = input.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+
+      if (numbers.length < 10) {
+        document.getElementById("output").innerText = "Please enter at least 10 recent multipliers.";
+        return;
+      }
+
+      // Average and trend analysis
+      const avg = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+      const last = numbers[numbers.length - 1];
+      let prediction = (avg + last) / 2 + (Math.random() - 0.5) * 0.3;
+
+      prediction = Math.max(1.01, Math.round(prediction * 100) / 100); // round and safe
+
+      // Betting logic
+      let advice = "Play Safe";
+      if (prediction > 3.0) advice = "GO BIG!";
+      else if (prediction > 2.0) advice = "Bet Medium";
+      else if (prediction < 1.5) advice = "Skip Round";
+
+      document.getElementById("output").innerHTML = `
+        <strong>Avg Multiplier:</strong> ${avg.toFixed(2)}<br>
+        <strong>Last Multiplier:</strong> ${last}<br>
+        <strong>Predicted Next:</strong> ${prediction}<br>
+        <strong>Advice:</strong> ${advice}
+      `;
+    }
+  </script>
+</body>
+</html>
